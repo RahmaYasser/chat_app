@@ -1,6 +1,7 @@
 import 'package:chat_app/widgets/auth/auth_form.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -11,10 +12,14 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _auth = FirebaseAuth.instance;
+  var _isLoading = true;
 
   void _submitAuthForm(
       String email, String username, String password, bool isLogin) async {
     UserCredential userCredential;
+    setState(() {
+      _isLoading = true;
+    });
     if (isLogin) {
       try {
         userCredential = await _auth.signInWithEmailAndPassword(
@@ -37,6 +42,16 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
+        var usrCreditUserObj = userCredential.user;
+        if (usrCreditUserObj != null) {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(usrCreditUserObj.uid)
+              .set({
+            'username': username,
+            'email': email,
+          });
+        }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -48,6 +63,9 @@ class _AuthScreenState extends State<AuthScreen> {
           //print('The account already exists for that email.');
         }
       } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
         print(e);
       }
     }
@@ -57,6 +75,6 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
-        body: AuthForm(_submitAuthForm));
+        body: AuthForm(_submitAuthForm,_isLoading));
   }
 }

@@ -3,8 +3,9 @@ import 'package:flutter/rendering.dart';
 
 class AuthForm extends StatefulWidget {
   //const AuthForm({Key? key}) : super(key: key);
-  AuthForm(this.submitFn);
+  AuthForm(this.submitFn,this.isLoading);
   final void Function(String email,String username,String password,bool isLogin) submitFn;
+  bool isLoading;
   @override
   _AuthFormState createState() => _AuthFormState();
 }
