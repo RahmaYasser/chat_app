@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/auth_screen.dart';
 import 'package:chat_app/screens/chat_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ChatApp',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        backgroundColor: Colors.pink,
+        buttonTheme: ButtonTheme.of(context).copyWith(
+          buttonColor: Colors.pink,
+          textTheme: ButtonTextTheme.primary,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+        ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.pink).copyWith(secondary: Colors.deepPurple)
       ),
-      home: const ChatScreen(),
+      home: const AuthScreen(),
     );
   }
 }
