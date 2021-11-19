@@ -3,9 +3,12 @@ import 'package:flutter/rendering.dart';
 
 class AuthForm extends StatefulWidget {
   //const AuthForm({Key? key}) : super(key: key);
-  AuthForm(this.submitFn,this.isLoading);
-  final void Function(String email,String username,String password,bool isLogin) submitFn;
+  AuthForm(this.submitFn, this.isLoading);
+
+  final void Function(
+      String email, String username, String password, bool isLogin) submitFn;
   bool isLoading;
+
   @override
   _AuthFormState createState() => _AuthFormState();
 }
@@ -21,11 +24,13 @@ class _AuthFormState extends State<AuthForm> {
   void _trySubmit() {
     var formKeyCurrentState = _formKey.currentState;
     final isValid;
-    formKeyCurrentState!=null? isValid = formKeyCurrentState.validate():isValid=false;
+    formKeyCurrentState != null
+        ? isValid = formKeyCurrentState.validate()
+        : isValid = false;
     FocusScope.of(context).unfocus();
     if (isValid) {
-      if (formKeyCurrentState!=null) formKeyCurrentState.save();
-      widget.submitFn(_email,_username,_password,_isLogin);
+      if (formKeyCurrentState != null) formKeyCurrentState.save();
+      widget.submitFn(_email, _username, _password, _isLogin);
       print(_email);
       print(_username);
       print(_password);
@@ -48,16 +53,16 @@ class _AuthFormState extends State<AuthForm> {
                   TextFormField(
                     key: const ValueKey('email'),
                     onSaved: (value) {
-                      if(value!=null) _email=value;
+                      if (value != null) _email = value;
                     },
                     validator: (value) {
                       var isEmpty;
                       var notContainsAt;
-                      if(value != null){
+                      if (value != null) {
                         print(isEmpty);
                         isEmpty = value.isEmpty;
-                         notContainsAt = !value.contains('@');
-                      } else{
+                        notContainsAt = !value.contains('@');
+                      } else {
                         print("validator not working");
                       }
                       if (isEmpty || notContainsAt) {
@@ -73,17 +78,19 @@ class _AuthFormState extends State<AuthForm> {
                     TextFormField(
                       key: const ValueKey('username'),
                       onSaved: (value) {
-                        if (value!=null){
+                        if (value != null) {
                           _username = value;
                         }
                       },
                       validator: (value) {
                         var isEmpty;
                         var lessThanFour;
-                        if(value != null){
+                        if (value != null) {
                           isEmpty = value.isEmpty;
                           print(isEmpty);
-                          lessThanFour = value.length<4?lessThanFour = true:lessThanFour=false;
+                          lessThanFour = value.length < 4
+                              ? lessThanFour = true
+                              : lessThanFour = false;
                         }
                         if (isEmpty || lessThanFour) {
                           return 'Username should be more 4 or more characters';
@@ -97,10 +104,12 @@ class _AuthFormState extends State<AuthForm> {
                     validator: (value) {
                       var isEmpty;
                       var lessThanEight;
-                      if(value != null){
+                      if (value != null) {
                         isEmpty = value.isEmpty;
                         print(isEmpty);
-                        lessThanEight = value.length<8?lessThanEight = true:lessThanEight=false;
+                        lessThanEight = value.length < 8
+                            ? lessThanEight = true
+                            : lessThanEight = false;
                       }
                       if (isEmpty || lessThanEight) {
                         return 'Password should be at least 8 characters';
@@ -110,25 +119,28 @@ class _AuthFormState extends State<AuthForm> {
                     decoration: const InputDecoration(labelText: 'Password'),
                     obscureText: true,
                     onSaved: (value) {
-                      if(value!=null) _password = value;
+                      if (value != null) _password = value;
                     },
                   ),
                   const SizedBox(
                     height: 12,
                   ),
-                  ElevatedButton(
-                      child: Text(_isLogin ? 'Login' : 'Signup'),
-                      onPressed: _trySubmit),
-                  TextButton(
-                    child: Text(_isLogin
-                        ? 'Create new account'
-                        : 'already have account'),
-                    onPressed: () {
-                      setState(() {
-                        _isLogin = !_isLogin;
-                      });
-                    },
-                  )
+                  if (widget.isLoading) CircularProgressIndicator(),
+                  if (!widget.isLoading)
+                    ElevatedButton(
+                        child: Text(_isLogin ? 'Login' : 'Signup'),
+                        onPressed: _trySubmit),
+                  if (!widget.isLoading)
+                    TextButton(
+                      child: Text(_isLogin
+                          ? 'Create new account'
+                          : 'already have account'),
+                      onPressed: () {
+                        setState(() {
+                          _isLogin = !_isLogin;
+                        });
+                      },
+                    )
                 ],
               ),
             ),
