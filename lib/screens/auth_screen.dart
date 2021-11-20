@@ -5,14 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
-
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
   final _auth = FirebaseAuth.instance;
-  var _isLoading = true;
+  var _isLoading = false;
 
   void _submitAuthForm(
       String email, String username, String password, bool isLogin) async {
