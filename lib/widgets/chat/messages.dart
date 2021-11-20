@@ -17,7 +17,7 @@ class Messages extends StatelessWidget {
         final documents = snapshot.data!.docs;
         return ListView.builder(
           itemCount: documents.length,
-          itemBuilder:(cxt, index) => Text(documents[index]['Text']),
+          itemBuilder:(cxt, index) => Text(documents[index]['text']),
         );
       },
     );
